@@ -42,8 +42,8 @@ class sudoku:
             for j in self.bounds:
                 self.gl[i].append(None)
                 self.gc[i].append(0)
-        print "gl is ", self.gl
-        print "gc is ", self.gc
+        print("gl is ", self.gl)
+        print("gc is ", self.gc)
 
     def setpuzzle(self, puzzle):
         self.puzzle = puzzle
@@ -58,8 +58,8 @@ class sudoku:
     def printpuzzle(self):
         for i in self.bounds:
             for j in self.bounds:
-                print self.pretty(self.puzzle[i][j]),
-            print
+                print( self.pretty(self.puzzle[i][j]),end=" ")
+            print("")
 
     def inittaken(self):
         """builds taken set for each cell, initially empty"""
@@ -84,7 +84,7 @@ class sudoku:
                 if val:
                     counts[val] = counts[val] + 1
 
-        print "all_taken: counts ", counts
+        print("all_taken: counts ", counts)
 
         for k in self.bounds:
             if counts[k] == self.n_sqrd:
@@ -158,7 +158,7 @@ class sudoku:
         if self.unguesscount > self.n_sqrd:
             return
         if len(self.guesses) == 0:
-            print "no guesses left to undo..."
+            print( "no guesses left to undo...")
             return
         while len(self.guesses) and k > 0:
             k = k - 1
@@ -166,7 +166,7 @@ class sudoku:
             results = self.guessresults.pop()
             for i, j in results:
                 self.puzzle[i][j] = None
-            print "unguessing at ", first
+            print("unguessing at ", first)
             self.puzzle[first[0]][first[1]] = None
         self.inittaken()
         self.update_taken()
@@ -183,12 +183,12 @@ class sudoku:
                     and len(self.taken[i][j]) == self.n_sqrd - 1
                 ):
                     mustbe = self.missing(self.taken[i][j])
-                    print "force: at ", i, j, "can only be ", mustbe
+                    print("force: at ", i, j, "can only be ", mustbe)
                     if self.checkmove(i, j, mustbe):
-                        print "did that..."
+                        print("did that...")
                         return 1
                     else:
-                        print "contradictory state -- back out guesses..."
+                        print("contradictory state -- back out guesses...")
                         self.unguess()
 
         return res
@@ -212,14 +212,14 @@ class sudoku:
                         ccount = ccount + 1
                         cslot = k
                 if rcount == 1:
-                    print "pigeonhole: row ", i, "has just one possible", n
+                    print("pigeonhole: row ", i, "has just one possible", n)
                     if self.checkmove(i, rslot, n):
-                        print "did that..."
+                        print("did that...")
                         return 1
                 if ccount == 1:
-                    print "pigeonhole: col ", i, "has just one possible", n
+                    print("pigeonhole: col ", i, "has just one possible", n)
                     if self.checkmove(cslot, i, n):
-                        print "did that..."
+                        print( "did that...")
                         return 1
 
             for ui, uj in self.uppers:
@@ -233,10 +233,10 @@ class sudoku:
                         bcount = bcount + 1
 
                 if bcount == 1:
-                    print "pigeonhole: corner ", ui, uj, " has just one possible", n,
-                    print "at ", bi, bj
+                    print("pigeonhole: corner ", ui, uj, " has just one possible", n,end="")
+                    print("at ", bi, bj)
                     if self.checkmove(bi, bj, n):
-                        print "did that..."
+                        print("did that...")
                         return 1
 
         return res
@@ -274,9 +274,9 @@ class sudoku:
                         pmap[pair].append([i, j])
 
             for pair in pmap:
-                print ("pairs: %s" % repr(pmap))
+                print("pairs: %s" % repr(pmap))
                 if len(pmap[pair]) == 2:
-                    print ("pairs: pair of %s at %s" % (repr(pair), repr(pmap[pair])))
+                    print("pairs: pair of %s at %s" % (repr(pair), repr(pmap[pair])))
                     if pmap[pair][0][0] == pmap[pair][1][0]:
                         # same row
                         r = pmap[pair][0][0]
@@ -284,18 +284,18 @@ class sudoku:
                         d = pmap[pair][1][1]
                         for k in self.bounds:
                             if k != c and k != d:
-                                print ("putting %s on %s" % (pair, [r, k]))
+                                print("putting %s on %s" % (pair, [r, k]))
                                 self.taken[r][k][pair[0]] = 1
                                 self.taken[r][k][pair[1]] = 1
                     if pmap[pair][0][1] == pmap[pair][1][1]:
                         # same row
                         c = pmap[pair][0][1]
-                        print ("updating col: %d" % c)
+                        print("updating col: %d" % c)
                         r = pmap[pair][0][0]
                         s = pmap[pair][1][0]
                         for k in self.bounds:
                             if k != r and k != s:
-                                print ("putting %s on %s" % (pair, [k, c]))
+                                print("putting %s on %s" % (pair, [k, c]))
                                 self.taken[k][c][pair[0]] = 1
                                 self.taken[k][c][pair[1]] = 1
 
@@ -303,7 +303,7 @@ class sudoku:
                         i = ui + di
                         j = uj + dj
                         if [i, j] not in pmap[pair]:
-                            print ("putting %s on %s" % (pair, [i, j]))
+                            print("putting %s on %s" % (pair, [i, j]))
                             self.taken[i][j][pair[0]] = 1
                             self.taken[i][j][pair[1]] = 1
 
@@ -315,7 +315,7 @@ class sudoku:
                 and len(self.taken[i][k]) == self.n_sqrd - 1
                 and self.missing(self.taken[i][k]) == n
             ):
-                print "checkmove: setting", i, j, " to ", n, "wedges row", i, k
+                print("checkmove: setting", i, j, " to ", n, "wedges row", i, k)
                 return 0
             if (
                 k != i
@@ -323,7 +323,7 @@ class sudoku:
                 and len(self.taken[k][j]) == self.n_sqrd - 1
                 and self.missing(self.taken[k][j]) == n
             ):
-                print "checkmove: setting", i, j, " to ", n, "wedges col", k, j
+                print("checkmove: setting", i, j, " to ", n, "wedges col", k, j)
                 return 0
 
         ui = int((i - 1) / self.order) * self.order + 1
@@ -338,7 +338,7 @@ class sudoku:
                 and len(self.taken[ti][tj]) == self.n_sqrd - 1
                 and self.missing(self.taken[ti][tj]) == n
             ):
-                print "checkmove: setting", i, j, " to ", n, " wedges n-tant", ui + di, uj + dj
+                print("checkmove: setting", i, j, " to ", n, " wedges n-tant", ui + di, uj + dj)
                 return 0
 
         if len(self.guessresults) > 0:
@@ -348,7 +348,7 @@ class sudoku:
         return 1
 
     def guessone(self):
-        print "okay, guessing..."
+        print("okay, guessing...")
         maxlen = 0
         minlen = self.n_sqrd
         maxi = 0
@@ -368,17 +368,16 @@ class sudoku:
                     minj = j
 
         if minlen == 0:
-            print "freebee at ", mini, minj
+            print("freebee at ", mini, minj)
             if self.checkmove(mini, minj, 1):
-                print "did that..."
+                print("did that...")
                 self.guesses.append([mini, minj])
                 self.guessresults.append([])
                 return 1
 
         if maxlen > 0:
-            print "maxlen ", maxlen, " is at ", maxi, maxj, "taken is ", self.taken[
-                maxi
-            ][maxj]
+            print("maxlen ", maxlen, " is at ", maxi, maxj, "taken is ", 
+               self.taken[maxi][maxj])
             r = self.bounds
             if self.gl[maxi][maxj] == None:
                 gl = []
@@ -392,11 +391,11 @@ class sudoku:
             self.gc[maxi][maxj] = skipcount + 1
 
             for k in gl:
-                print "trying ", k
+                print("trying ", k)
                 skipcount = skipcount - 1
                 if skipcount < 0 and self.checkmove(maxi, maxj, k):
-                    print "did that..."
-                    print "guessone: at", maxi, maxj, "guessed", k
+                    print("did that...")
+                    print("guessone: at", maxi, maxj, "guessed", k)
                     self.guesses.append([maxi, maxj])
                     self.guessresults.append([])
                     return 1
